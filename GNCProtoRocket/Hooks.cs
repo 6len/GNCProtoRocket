@@ -33,7 +33,14 @@ namespace GNCProtoRocket
                             CharacterMaster master = component.master;
                             if (master)
                             {
-                               ProcMissile(GNCProtoRocketCount, component, master, teamIndex, damageReport.damageInfo.procChainMask, null, damageReport.damageInfo);
+                                if ((GNCProtoRocketCount + GNCProtoRocketConfig.GNCProtoRocketProcChance.Value) >=
+                                    UnityEngine.Random.Range(0, 100))
+                                {
+                                        ProcMissile(GNCProtoRocketCount, component, master, teamIndex,
+                                            damageReport.damageInfo.procChainMask, null, damageReport.damageInfo);
+                                    ProcMissile(GNCProtoRocketCount, component, master, teamIndex,
+                                        damageReport.damageInfo.procChainMask, null, damageReport.damageInfo);
+                                }
                             }
                         }
                     }
@@ -59,15 +66,15 @@ namespace GNCProtoRocket
 
                 if (Util.CheckRoll(10f * GNCProtoRocketConfig.GNCProtoRocketProcChance.Value, attackerMaster))
                 {
-                    float damageCoefficient = 3f * (float) stack;
+                    float damageCoefficient = 2f * (float) stack;
                     float damage = Util.OnHitProcDamage(damageInfo.damage, attackerBody.damage, damageCoefficient);
                     ProcChainMask procChainMask2 = procChainMask;
                     procChainMask2.AddProc(ProcType.Missile);
                     FireProjectileInfo fireProjectileInfo = new FireProjectileInfo
                     {
-                        projectilePrefab = GlobalEventManager.instance.missilePrefab,
+                        projectilePrefab = GlobalEventManager.instance.daggerPrefab,
                         position = position,
-                        rotation = Util.QuaternionSafeLookRotation(up),
+                        rotation = Util.QuaternionSafeLookRotation(Vector3.up + Random.insideUnitSphere * 0.1f),
                         procChainMask = procChainMask2,
                         target = victim,
                         owner = gameObject,

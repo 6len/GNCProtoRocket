@@ -14,11 +14,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="rampage" />
+    <None Remove="exampleitemmod" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="rampage" />
+    <EmbeddedResource Include="exampleitemmod" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using R2API;
 using RoR2;
 using UnityEngine;
@@ -7,13 +9,24 @@ namespace GNCProtoRocket
     class GNCProtoRocket
     {
         internal static ItemIndex GNCProtoRocketItemIndex;
-
+        
+        internal static GameObject GNCProtoRocketPrefab;
         private const string ModPrefix = "@GNCProtoRocket:";
         private const string PrefabPath = ModPrefix + "Assets/Import/belt/belt.prefab";
         private const string IconPath = ModPrefix + "Assets/Import/belt_icon/belt_icon.png";
 
         internal static void Init()
         {
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("GNCProtoRocket.exampleitemmod")) 
+            {
+                Debug.Log(Assembly.GetExecutingAssembly().GetManifestResourceNames()[0]);
+                var bundle = AssetBundle.LoadFromStream(stream);
+                var provider = new AssetBundleResourcesProvider(ModPrefix.TrimEnd(':'), bundle);
+                ResourcesAPI.AddProvider(provider);
+
+                GNCProtoRocketPrefab = bundle.LoadAsset<GameObject>("Assets/Import/belt/belt.prefab");
+            }
+            
             AddTokens();
             AddGNCProtoRocket();
         }
@@ -37,7 +50,7 @@ namespace GNCProtoRocket
                 }
             };
 
-            var itemDisplayRules = new ItemDisplayRule[0]; // keep this null if you don't want the item to show up on the survivor 3d model. You can also have multiple rules !
+            ItemDisplayRule[] itemDisplayRules = null; // keep this null if you don't want the item to show up on the survivor 3d model. You can also have multiple rules !
 
             var gncProtoRocket = new R2API.CustomItem(GNCProtoRocketItemDef, itemDisplayRules);
 
